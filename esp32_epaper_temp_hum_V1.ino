@@ -2,7 +2,6 @@
 #include "DEV_Config.h"
 #include "EPD.h"
 #include "GUI_Paint.h"
-#include "imagedata.h"
 #include <stdlib.h>
 
 #include "Seeed_SHT35.h"
@@ -25,45 +24,39 @@
 #endif
 
 SHT35 sensor(SCLPIN);
-RTC_DATA_ATTR int bootCount = 0;
+RTC_DATA_ATTR int counter = 0;
 RTC_DATA_ATTR float temp,hum;
-UBYTE *BlackImage;
+UBYTE *Image;
 
 void initTempSensor(){
-
     if(sensor.init())
     {
       printf("sensor init failed!!!");
     }
-
 }
 
 void initEpaper(){
   SERIAL.println("------------- epaper init starting");
-	DEV_Module_Init();
-
-	printf("e-Paper Init and Clear...\r\n");
+    DEV_Module_Init();
 	EPD_2in13_V4_Init();
 
 	//Create a new image cache
 	UWORD Imagesize = ((EPD_2in13_V4_WIDTH % 8 == 0)? (EPD_2in13_V4_WIDTH / 8 ): (EPD_2in13_V4_WIDTH / 8 + 1)) * EPD_2in13_V4_HEIGHT;
-	if((BlackImage = (UBYTE *)malloc(Imagesize)) == NULL) 
+	if((Image = (UBYTE *)malloc(Imagesize)) == NULL)
 	{
 		printf("Failed to apply for black memory...\r\n");
 		while (1);
 	}
 	printf("Paint_NewImage\r\n");
-	Paint_NewImage(BlackImage, EPD_2in13_V4_WIDTH, EPD_2in13_V4_HEIGHT, 90, WHITE);
+	Paint_NewImage(Image, EPD_2in13_V4_WIDTH, EPD_2in13_V4_HEIGHT, 90, WHITE);
 	Paint_Clear(WHITE);
 
 	Paint_DrawString_EN(20, 30, "Temp", &Font24, WHITE, BLACK);
-  Paint_DrawString_EN(140, 30, "Hum", &Font24, WHITE, BLACK);
-	
-  Paint_DrawString_EN(5, 60, "*", &Font24, WHITE, BLACK);
-  Paint_DrawString_EN(125, 60, "*", &Font24, WHITE, BLACK);
+    Paint_DrawString_EN(140, 30, "Hum", &Font24, WHITE, BLACK);
+    Paint_DrawString_EN(5, 60, "*", &Font24, WHITE, BLACK);
+    Paint_DrawString_EN(125, 60, "*", &Font24, WHITE, BLACK);
 
-	EPD_2in13_V4_Display_Base(BlackImage);
-
+	EPD_2in13_V4_Display_Base(Image);
 }
 
 void init(){
@@ -78,18 +71,10 @@ void printFloat(int x, int y, float value, char* format){
    	Paint_DrawString_EN(x, y, buffer, &Font24, WHITE, BLACK);
 }
 
-void printInt(int x, int y, int value){
-    char buffer[16];
-    int ret = snprintf(buffer, sizeof buffer, "%i", value);
-    Paint_ClearWindows(x, y, x + (strlen(buffer) * 20), y+24, WHITE);
-   	Paint_DrawString_EN(x, y, buffer, &Font20, WHITE, BLACK);
-}
-
 void showTempAndHum(){
     printf("show temp and hum \r\n");
-    printInt(180,10,bootCount);
 
-    Paint_DrawString_EN(5, 60, "*", &Font24, WHITE, BLACK);
+    // display previous readings
     printFloat(20,90,temp, "%.2f");
     printFloat(140,90,hum, "%.2f");
 
@@ -97,10 +82,11 @@ void showTempAndHum(){
     u8 data[6]={0};
     sensor.read_meas_data_single_shot(HIGH_REP_WITH_STRCH,&temp,&hum);
 
+    // display current readings
     printFloat(20,60,temp, "%.2f");
     printFloat(140,60,hum, "%.2f");
 
- 	  EPD_2in13_V4_Display_Partial(BlackImage);
+ 	EPD_2in13_V4_Display_Partial(Image);
 }
 
 /* Entry point ----------------------------------------------------------------*/
@@ -115,7 +101,7 @@ void loop()
 {
   showTempAndHum();
   DEV_Delay_ms(50);
-  bootCount++; 
+  counter++;
   esp_light_sleep_start();
 }
 
