@@ -36,11 +36,11 @@ void initTempSensor(){
 }
 
 void initEpaper(){
-  SERIAL.println("------------- epaper init starting");
+  printf("epaper init starting...\r\n");
   DEV_Module_Init();
   EPD_2in13_V4_Init();
 
-    //Create a new image cache
+  //Create a new image cache
   UWORD Imagesize = ((EPD_2in13_V4_WIDTH % 8 == 0)? (EPD_2in13_V4_WIDTH / 8 ): (EPD_2in13_V4_WIDTH / 8 + 1)) * EPD_2in13_V4_HEIGHT;
   if((Image = (UBYTE *)malloc(Imagesize)) == NULL)
   {
@@ -51,8 +51,10 @@ void initEpaper(){
   Paint_NewImage(Image, EPD_2in13_V4_WIDTH, EPD_2in13_V4_HEIGHT, 90, WHITE);
   Paint_Clear(WHITE);
 
-  Paint_DrawString_EN(20, 30, "Temp", &Font24, WHITE, BLACK);
-  Paint_DrawString_EN(140, 30, "Hum", &Font24, WHITE, BLACK);
+  Paint_DrawString_EN(20, 10, "Temp", &Font20, WHITE, BLACK);
+  Paint_DrawString_EN(140, 10, "Humid", &Font20, WHITE, BLACK);
+  Paint_DrawLine(15, 40, 225, 40, BLACK, DOT_PIXEL_1X1, LINE_STYLE_SOLID);
+  Paint_DrawLine(115, 10, 115, 110, BLACK, DOT_PIXEL_1X1, LINE_STYLE_SOLID);
   Paint_DrawString_EN(5, 60, "*", &Font24, WHITE, BLACK);
   Paint_DrawString_EN(125, 60, "*", &Font24, WHITE, BLACK);
 
@@ -67,7 +69,7 @@ void init(){
 void printFloat(int x, int y, float value, char* format){
   char buffer[16];
   int ret = snprintf(buffer, sizeof buffer, format, value);
-  Paint_ClearWindows(x, y, x + (strlen(buffer) * 20), y+24, WHITE);
+  Paint_ClearWindows(x, y, x + (strlen(buffer) * 18), y+24, WHITE);
   Paint_DrawString_EN(x, y, buffer, &Font24, WHITE, BLACK);
 }
 
