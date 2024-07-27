@@ -37,26 +37,26 @@ void initTempSensor(){
 
 void initEpaper(){
   SERIAL.println("------------- epaper init starting");
-    DEV_Module_Init();
-	EPD_2in13_V4_Init();
+  DEV_Module_Init();
+  EPD_2in13_V4_Init();
 
-	//Create a new image cache
-	UWORD Imagesize = ((EPD_2in13_V4_WIDTH % 8 == 0)? (EPD_2in13_V4_WIDTH / 8 ): (EPD_2in13_V4_WIDTH / 8 + 1)) * EPD_2in13_V4_HEIGHT;
-	if((Image = (UBYTE *)malloc(Imagesize)) == NULL)
-	{
-		printf("Failed to apply for black memory...\r\n");
-		while (1);
-	}
-	printf("Paint_NewImage\r\n");
-	Paint_NewImage(Image, EPD_2in13_V4_WIDTH, EPD_2in13_V4_HEIGHT, 90, WHITE);
-	Paint_Clear(WHITE);
+    //Create a new image cache
+  UWORD Imagesize = ((EPD_2in13_V4_WIDTH % 8 == 0)? (EPD_2in13_V4_WIDTH / 8 ): (EPD_2in13_V4_WIDTH / 8 + 1)) * EPD_2in13_V4_HEIGHT;
+  if((Image = (UBYTE *)malloc(Imagesize)) == NULL)
+  {
+    printf("Failed to apply for black memory...\r\n");
+    while (1);
+  }
+  printf("Paint_NewImage\r\n");
+  Paint_NewImage(Image, EPD_2in13_V4_WIDTH, EPD_2in13_V4_HEIGHT, 90, WHITE);
+  Paint_Clear(WHITE);
 
   Paint_DrawString_EN(20, 30, "Temp", &Font24, WHITE, BLACK);
   Paint_DrawString_EN(140, 30, "Hum", &Font24, WHITE, BLACK);
   Paint_DrawString_EN(5, 60, "*", &Font24, WHITE, BLACK);
   Paint_DrawString_EN(125, 60, "*", &Font24, WHITE, BLACK);
 
-	EPD_2in13_V4_Display_Base(Image);
+  EPD_2in13_V4_Display_Base(Image);
 }
 
 void init(){
@@ -84,7 +84,7 @@ void showTempAndHum(){
   printFloat(20,60,temp, "%.2f");
   printFloat(140,60,hum, "%.2f");
 
- 	EPD_2in13_V4_Display_Partial(Image);
+  EPD_2in13_V4_Display_Partial(Image);
 }
 
 /* Entry point ----------------------------------------------------------------*/
