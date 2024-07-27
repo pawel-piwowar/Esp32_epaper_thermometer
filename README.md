@@ -33,3 +33,7 @@ Other sleep modes (e.g. deep sleep) could be used as well reducing power consump
 ## Final effect
 
 ![hardware-final.png](images/hardware-final.png)
+
+Another variation of presenting data. Produced using [esp32_epaper_temp_hum_V2.ino](esp32_epaper_temp_hum_V2.ino)
+
+![img.png](img.png)
