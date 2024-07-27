@@ -55,11 +55,8 @@ void initEpaper(){
 
 void drawTemplate(){
 
-  // Paint_DrawString_EN(1, 10, "T", &Font24, WHITE, BLACK);
-  // Paint_DrawString_EN(125, 10, "H", &Font24, WHITE, BLACK);
-
   Paint_DrawLine(15, 40, 225, 40, BLACK, DOT_PIXEL_1X1, LINE_STYLE_SOLID);
-  Paint_DrawLine(115, 10, 115, 110, BLACK, DOT_PIXEL_1X1, LINE_STYLE_SOLID);
+  Paint_DrawLine(115, 10, 115, 120, BLACK, DOT_PIXEL_1X1, LINE_STYLE_SOLID);
 
   EPD_2in13_V4_Display_Base(Image);
 }
@@ -80,7 +77,7 @@ void resetChart(int x, int y, float value, int middleValue){
   int middleY = y-25;
   int lowY = y;
   int highY = y-50;
-  Paint_ClearWindows(x, y-60, x + 100, y, WHITE);
+  Paint_ClearWindows(x, y-60, x + 100, y + 10, WHITE);
   int lineXStart = x+20;
   int lineXEnd = x+100;
   Paint_DrawLine(lineXStart, middleY, lineXEnd, middleY, BLACK, DOT_PIXEL_1X1, LINE_STYLE_DOTTED);
@@ -92,7 +89,7 @@ void resetChart(int x, int y, float value, int middleValue){
 }
 
 void drawChart(int x, int y, float current, float previous, int middle, int counter){
- int chartPixelsPerUnit = 25; 
+ int chartPixelsPerUnit = 25;
  float offsetCurrent = current - (float)middle;
  int offsetCurrentY = (int)(offsetCurrent * chartPixelsPerUnit) + chartPixelsPerUnit;
 
@@ -101,7 +98,7 @@ void drawChart(int x, int y, float current, float previous, int middle, int coun
 
  if (counter == 0) {
   offsetPreviousY = y + chartPixelsPerUnit;
- } 
+ }
 
  Paint_DrawLine(x, y-offsetPreviousY, x, y-offsetCurrentY, BLACK, DOT_PIXEL_1X1, LINE_STYLE_SOLID);
 }
@@ -130,14 +127,14 @@ void showTempAndHum(){
   printFloat(135,10,hum, "%.2f", "%");
 
   int tempChartYEnd = 115;
-  int tempChartXStart = 0;
+  int tempChartXStart = 1;
 
   int humChartYEnd = 115;
   int humChartXStart = 120;
 
   if (shoudResetChart(temp, tempChartMiddleValue, tempChartCounter )){
     tempChartMiddleValue = (int)temp;
-    resetChart(1, tempChartYEnd, temp, tempChartMiddleValue) ;
+    resetChart(tempChartXStart, tempChartYEnd, temp, tempChartMiddleValue) ;
     tempChartCounter = 0;
   }
 
@@ -159,7 +156,7 @@ void showTempAndHum(){
 /* Entry point ----------------------------------------------------------------*/
 void setup()
 {
-  int sleepSeconds = 2; 
+  int sleepSeconds = 60;
   esp_sleep_enable_timer_wakeup(sleepSeconds * uS_TO_S_FACTOR);
   init();
 }
