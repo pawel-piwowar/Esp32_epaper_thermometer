@@ -4,15 +4,15 @@
 - 2.13inch E-Paper Cloud Module, 250×122, WiFi Connectivity : https://www.waveshare.com/2.13inch-e-paper-cloud-module.htm
 - Grove - I2C High Accuracy Temp&Humi Sensor(SHT35) : https://wiki.seeedstudio.com/Grove-I2C_High_Accuracy_Temp%26Humi_Sensor-SHT35/
 
-![hardware.png](hardware.png)
+![hardware.png](images/hardware.png)
 
 ## Wiring
 Since E-Paper Cloud Module contains integrated ESP32, wiring is  pretty easy.  
-![wiring.png](wiring.png)
+![wiring.png](images/wiring.png)
 
 Please note, that Esp32 you have to solder wires to E32 chip on E-Paper board, since it does not have golden pins socket  
 
-![wiring2.png](wiring2.png)
+![wiring2.png](images/wiring2.png)
 
 
 ## Required libraries sources:
@@ -30,4 +30,4 @@ Could be used without external power source. Also could be powered and charged v
 
 ## Final effect
 
-![hardware-final.png](hardware-final.png)
+![hardware-final.png](images/hardware-final.png)
