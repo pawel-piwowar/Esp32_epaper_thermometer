@@ -29,10 +29,10 @@ RTC_DATA_ATTR float temp,hum;
 UBYTE *Image;
 
 void initTempSensor(){
-    if(sensor.init())
-    {
-      printf("sensor init failed!!!");
-    }
+  if(sensor.init())
+  {
+    printf("sensor init failed!!!");
+  }
 }
 
 void initEpaper(){
@@ -51,10 +51,10 @@ void initEpaper(){
 	Paint_NewImage(Image, EPD_2in13_V4_WIDTH, EPD_2in13_V4_HEIGHT, 90, WHITE);
 	Paint_Clear(WHITE);
 
-	Paint_DrawString_EN(20, 30, "Temp", &Font24, WHITE, BLACK);
-    Paint_DrawString_EN(140, 30, "Hum", &Font24, WHITE, BLACK);
-    Paint_DrawString_EN(5, 60, "*", &Font24, WHITE, BLACK);
-    Paint_DrawString_EN(125, 60, "*", &Font24, WHITE, BLACK);
+  Paint_DrawString_EN(20, 30, "Temp", &Font24, WHITE, BLACK);
+  Paint_DrawString_EN(140, 30, "Hum", &Font24, WHITE, BLACK);
+  Paint_DrawString_EN(5, 60, "*", &Font24, WHITE, BLACK);
+  Paint_DrawString_EN(125, 60, "*", &Font24, WHITE, BLACK);
 
 	EPD_2in13_V4_Display_Base(Image);
 }
@@ -65,26 +65,24 @@ void init(){
 }
 
 void printFloat(int x, int y, float value, char* format){
-    char buffer[16];
-    int ret = snprintf(buffer, sizeof buffer, format, value);
-    Paint_ClearWindows(x, y, x + (strlen(buffer) * 20), y+24, WHITE);
-   	Paint_DrawString_EN(x, y, buffer, &Font24, WHITE, BLACK);
+  char buffer[16];
+  int ret = snprintf(buffer, sizeof buffer, format, value);
+  Paint_ClearWindows(x, y, x + (strlen(buffer) * 20), y+24, WHITE);
+  Paint_DrawString_EN(x, y, buffer, &Font24, WHITE, BLACK);
 }
 
 void showTempAndHum(){
-    printf("show temp and hum \r\n");
+  printf("show temp and hum \r\n");
 
-    // display previous readings
-    printFloat(20,90,temp, "%.2f");
-    printFloat(140,90,hum, "%.2f");
+  // display previous readings
+  printFloat(20,90,temp, "%.2f");
+  printFloat(140,90,hum, "%.2f");
 
-    u16 value=0;
-    u8 data[6]={0};
-    sensor.read_meas_data_single_shot(HIGH_REP_WITH_STRCH,&temp,&hum);
+  sensor.read_meas_data_single_shot(HIGH_REP_WITH_STRCH,&temp,&hum);
 
-    // display current readings
-    printFloat(20,60,temp, "%.2f");
-    printFloat(140,60,hum, "%.2f");
+  // display current readings
+  printFloat(20,60,temp, "%.2f");
+  printFloat(140,60,hum, "%.2f");
 
  	EPD_2in13_V4_Display_Partial(Image);
 }
@@ -92,8 +90,8 @@ void showTempAndHum(){
 /* Entry point ----------------------------------------------------------------*/
 void setup()
 {
-   esp_sleep_enable_timer_wakeup(TIME_TO_SLEEP * uS_TO_S_FACTOR);
-   init();
+  esp_sleep_enable_timer_wakeup(TIME_TO_SLEEP * uS_TO_S_FACTOR);
+  init();
 }
 
 /* The main loop -------------------------------------------------------------*/
