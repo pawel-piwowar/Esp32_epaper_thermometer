@@ -21,10 +21,12 @@ Please note, that Esp32 you have to solder wires to E32 chip on E-Paper board, s
 
 ## Project features
 - High precision temperature sensor SHT35 is used with precision 0.1 - 0.2 °C
+- 2.13inch E-Paper Cloud Module has ESP32 chip and attached battery. The final package is light and small. 
+Could be used without external power source. Also could be powered and charged via usb-c without any additional circuits  
 - Very low power consumption, sleep mode of ESP32 is used
-- Display layout can be easily changed. In this example two readings are shown : current reading (marked with asterisk symbol) and previous one shown in a row below.
+- Display layout can be easily changed. In this example two readings are shown: current reading (marked with asterisk symbol) and previous one shown in a row below.
 - Temperature and humidity readings are made every 10 seconds, it could be changed to any other value according to our needs
-- ESP32 features WIFI connection capabilities. This could be added to a project.
+- ESP32 features WIFI connection capabilities. This could be added to a project using ESP32 libraries.
 
 ## Final effect
 
