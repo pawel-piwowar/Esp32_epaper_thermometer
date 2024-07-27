@@ -73,38 +73,38 @@ void printInt(int x, int y, int value){
   Paint_DrawString_EN(x, y, buffer, &Font12, WHITE, BLACK);
 }
 
-void resetChart(int x, int y, float value, int middleValue){
+void drawChart(int x, int y, float current, float previous, int middle, int unitStep, int counter){
+ float chartPixelsPerUnit = 25 / unitStep;
+ float offsetCurrent = current - (float)middle;
+ int offsetCurrentY = (int)(offsetCurrent * chartPixelsPerUnit + 25);
+
+ float offsetPrevious = previous - (float)middle;
+ int offsetPreviousY = (int)(offsetPrevious * chartPixelsPerUnit + 25);
+
+ if (counter == 0) {
+  offsetPreviousY = offsetCurrentY;
+ }
+
+ Paint_DrawLine(x, y-offsetPreviousY, x, y-offsetCurrentY, BLACK, DOT_PIXEL_2X2, LINE_STYLE_SOLID);
+}
+
+void resetChart(int x, int y, float value, int middleValue, int unitStep){
   int middleY = y-25;
   int lowY = y;
   int highY = y-50;
-  Paint_ClearWindows(x, y-60, x + 100, y + 10, WHITE);
+  Paint_ClearWindows(x, y-60, x + 100, y + 5, WHITE);
   int lineXStart = x+20;
   int lineXEnd = x+100;
   Paint_DrawLine(lineXStart, middleY, lineXEnd, middleY, BLACK, DOT_PIXEL_1X1, LINE_STYLE_DOTTED);
   Paint_DrawLine(lineXStart,lowY, lineXEnd, lowY, BLACK, DOT_PIXEL_1X1, LINE_STYLE_DOTTED);
   Paint_DrawLine(lineXStart, highY, lineXEnd, highY, BLACK, DOT_PIXEL_1X1, LINE_STYLE_DOTTED);
   printInt(x, middleY-5, middleValue);
-  printInt(x, lowY-5, middleValue - 1);
-  printInt(x, highY-5, middleValue + 1);
+  printInt(x, lowY-5, middleValue - unitStep);
+  printInt(x, highY-5, middleValue + unitStep);
 }
 
-void drawChart(int x, int y, float current, float previous, int middle, int counter){
- int chartPixelsPerUnit = 25;
- float offsetCurrent = current - (float)middle;
- int offsetCurrentY = (int)(offsetCurrent * chartPixelsPerUnit) + chartPixelsPerUnit;
-
- float offsetPrevious = previous - (float)middle;
- int offsetPreviousY = (int)(offsetPrevious * chartPixelsPerUnit) + chartPixelsPerUnit;
-
- if (counter == 0) {
-  offsetPreviousY = y + chartPixelsPerUnit;
- }
-
- Paint_DrawLine(x, y-offsetPreviousY, x, y-offsetCurrentY, BLACK, DOT_PIXEL_1X1, LINE_STYLE_SOLID);
-}
-
-boolean shoudResetChart(float value, int middleValue, int counter){
-    bool valueOutsideChart = value > (middleValue + 1) || value < middleValue -1;
+boolean shoudResetChart(float value, int middleValue, int counter, int unitOffset){
+    bool valueOutsideChart = value > (middleValue + unitOffset) || value < middleValue - unitOffset;
     bool counterMaxReached = counter > 80;
     return valueOutsideChart || counterMaxReached;
 }
@@ -112,6 +112,9 @@ boolean shoudResetChart(float value, int middleValue, int counter){
 void printFloat(int x, int y, float value, char* format, char* unitSymbol){
   char buffer[16];
   int ret = snprintf(buffer, sizeof buffer, format, value);
+  if (ret < 0) {
+    throw;
+  }
   Paint_ClearWindows(x, y, x + (strlen(buffer) * 18), y+24, WHITE);
   Paint_DrawString_EN(x, y, strcat(buffer, unitSymbol), &Font24, WHITE, BLACK);
 }
@@ -124,28 +127,30 @@ void showTempAndHum(){
 
   // display current readings
   printFloat(1,10,temp, "%.2f", "C");
-  printFloat(135,10,hum, "%.2f", "%");
+  printFloat(145,10,hum, "%.1f", "%");
 
   int tempChartYEnd = 115;
   int tempChartXStart = 1;
+  int tempChartUnitOffset = 2;
 
   int humChartYEnd = 115;
   int humChartXStart = 120;
+  int humChartUnitOffset = 10;
 
-  if (shoudResetChart(temp, tempChartMiddleValue, tempChartCounter )){
-    tempChartMiddleValue = (int)temp;
-    resetChart(tempChartXStart, tempChartYEnd, temp, tempChartMiddleValue) ;
+  if (shoudResetChart(temp, tempChartMiddleValue, tempChartCounter, tempChartUnitOffset )){
+    tempChartMiddleValue = std::round(std::round(temp / tempChartUnitOffset) * tempChartUnitOffset);
+    resetChart(tempChartXStart, tempChartYEnd, temp, tempChartMiddleValue, tempChartUnitOffset) ;
     tempChartCounter = 0;
   }
 
-  if (shoudResetChart(hum, humChartMiddleValue, humChartCounter )){
-    humChartMiddleValue = (int)hum;
-    resetChart(humChartXStart, humChartYEnd, hum, humChartMiddleValue);
+  if (shoudResetChart(hum, humChartMiddleValue, humChartCounter, humChartUnitOffset)){
+    humChartMiddleValue = std::round(std::round(hum / humChartUnitOffset) * humChartUnitOffset);
+    resetChart(humChartXStart, humChartYEnd, hum, humChartMiddleValue, humChartUnitOffset);
     humChartCounter = 0;
   }
 
-  drawChart(tempChartXStart + 20 + tempChartCounter, tempChartYEnd, temp, previousTempValue, tempChartMiddleValue, tempChartCounter);
-  drawChart(humChartXStart + 20 + humChartCounter, humChartYEnd, hum, previousHumValue, humChartMiddleValue, humChartCounter);
+  drawChart(tempChartXStart + 20 + tempChartCounter, tempChartYEnd, temp, previousTempValue, tempChartMiddleValue, tempChartUnitOffset, tempChartCounter);
+  drawChart(humChartXStart + 20 + humChartCounter, humChartYEnd, hum, previousHumValue, humChartMiddleValue, humChartUnitOffset, humChartCounter);
 
   tempChartCounter++;
   humChartCounter++;
@@ -156,7 +161,7 @@ void showTempAndHum(){
 /* Entry point ----------------------------------------------------------------*/
 void setup()
 {
-  int sleepSeconds = 60;
+  int sleepSeconds = 1;
   esp_sleep_enable_timer_wakeup(sleepSeconds * uS_TO_S_FACTOR);
   init();
 }
