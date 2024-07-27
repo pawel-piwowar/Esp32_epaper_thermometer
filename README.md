@@ -10,7 +10,7 @@
 Since E-Paper Cloud Module contains integrated ESP32, wiring is  pretty easy.  
 ![wiring.png](images/wiring.png)
 
-Please note, that in case of this board, you will have to solder wires to E32 chip, since it does not have gold pins, or even a possibility to mount them.  
+Please note, that in case of this board, you will have to solder wires to ESP32 chip, since it does not have gold pins, or even a possibility to mount them.  
 
 ![wiring2.png](images/wiring2.png)
 
