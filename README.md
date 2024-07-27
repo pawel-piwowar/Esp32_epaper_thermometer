@@ -1,4 +1,4 @@
-# Esp32_epaper_thermometer
+ Esp32_epaper_thermometer
 
 ## Hardware used:
 - 2.13inch E-Paper Cloud Module, 250×122, WiFi Connectivity : https://www.waveshare.com/2.13inch-e-paper-cloud-module.htm
