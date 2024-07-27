@@ -51,8 +51,8 @@ void initEpaper(){
   Paint_NewImage(Image, EPD_2in13_V4_WIDTH, EPD_2in13_V4_HEIGHT, 90, WHITE);
   Paint_Clear(WHITE);
 
-  Paint_DrawString_EN(20, 10, "Temp", &Font20, WHITE, BLACK);
-  Paint_DrawString_EN(140, 10, "Humid", &Font20, WHITE, BLACK);
+  Paint_DrawString_EN(20, 10, "Temp C", &Font20, WHITE, BLACK);
+  Paint_DrawString_EN(140, 10, "Humid %", &Font20, WHITE, BLACK);
   Paint_DrawLine(15, 40, 225, 40, BLACK, DOT_PIXEL_1X1, LINE_STYLE_SOLID);
   Paint_DrawLine(115, 10, 115, 110, BLACK, DOT_PIXEL_1X1, LINE_STYLE_SOLID);
   Paint_DrawString_EN(5, 60, "*", &Font24, WHITE, BLACK);
