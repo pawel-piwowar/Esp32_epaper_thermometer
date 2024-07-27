@@ -10,7 +10,7 @@
 Since E-Paper Cloud Module contains integrated ESP32, wiring is  pretty easy.  
 ![wiring.png](images/wiring.png)
 
-Please note, that in case of this board, you will have to solder wires to ESP32 chip, since it does not have gold pins, or even a possibility to mount them.  
+Please note, that in case of this board, you will have to solder wires to ESP32 chip, since this board does not have gold pins, or even an option to mount them.  
 
 ![wiring2.png](images/wiring2.png)
 
@@ -23,7 +23,9 @@ Please note, that in case of this board, you will have to solder wires to ESP32 
 - High precision temperature sensor SHT35 is used with precision 0.1 - 0.2 °C
 - 2.13inch E-Paper Cloud Module has ESP32 chip and attached battery. The final package is light and small. 
 Could be used without external power source. Also could be powered and charged via usb-c without any additional circuits  
-- Very low power consumption, sleep mode of ESP32 is used
+- Very low power consumption, light sleep mode of ESP32 is used. 
+- Partial screen refresh function is used. Screen does not flicker, like it does when full refresh is made. 
+Other sleep modes (e.g. deep sleep) could be used as well reducing power consumption even more (however I did not manage to avoid screen refreshes after deep sleep wake up).
 - Display layout can be easily changed. In this example two readings are shown: current reading (marked with asterisk symbol) and previous one shown in a row below.
 - Temperature and humidity readings are made every 10 seconds, it could be changed to any other value according to our needs
 - ESP32 features WIFI connection capabilities. This could be added to a project using ESP32 libraries.
