@@ -5,7 +5,7 @@ since they have better contrast than LCD and consume power only when refreshed. 
 - high measurement accuracy. For that reason I chose sensor based on STH35 from Sensirion,
 since it offers very high precision (about 0.1 °C) (https://sensirion.com/media/documents/213E6A3B/63A5A569/Datasheet_SHT3x_DIS.pdf)
 Of course cheaper alternative can be used if we can accept lower accuracy. 
-For example DTH22, which I used in my another project https://www.waveshare.com/dht22-temperature-humidity-sensor.htm
+For example DHT22, which I used in my another project https://www.waveshare.com/dht22-temperature-humidity-sensor.htm
 
 ### Comparison between two of my projects using STH35 and DTH22 sensors. 
 In room temperature difference between them is in most cases in 0.1 - 0.3 °C range,
