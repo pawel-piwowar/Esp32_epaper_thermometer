@@ -32,8 +32,19 @@ Other sleep modes (e.g. deep sleep) could be used as well reducing power consump
 
 ## Final effect
 
+### Simple version of code using built-in fonts : [esp32_epaper_temp_hum.ino](esp32_epaper_temp_hum/esp32_epaper_temp_hum.ino)
+
 ![hardware-final.png](images/hardware-final.png)
 
-Another variation of presenting data. Produced using [esp32_epaper_temp_hum_V2.ino](esp32_epaper_temp_hum_V2.ino)
+
+### Presenting charts: [esp32_epaper_temp_hum_chart.ino](esp32_epaper_temp_hum_chart/esp32_epaper_temp_hum_chart.ino)
 
 ![hardware-final-V2.png](images/hardware-final-V2.png)
+
+### Using custom big digit fonts: [esp32_epaper_temp_hum_big_digits.ino](esp32_epaper_temp_hum_big_digits/esp32_epaper_temp_hum_big_digits.ino)
+
+Temperature and humidity are shown one after the other. First humidity, then there is 2 seconds delay,
+temperature is shown next, following with sleep for 10 seconds. This way power consumption is minimalized.
+
+![big_digits_hum.jpg](images/big_digits_hum.jpg)
+![big_digits_temp.jpg](images/big_digits_temp.jpg)

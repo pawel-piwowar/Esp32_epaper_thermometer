@@ -3,6 +3,7 @@
 #include "EPD.h"
 #include "GUI_Paint.h"
 #include <stdlib.h>
+#include "ImageData.h"
 
 #include "Seeed_SHT35.h"
 
@@ -48,22 +49,57 @@ void initEpaper(){
     printf("Failed to apply for black memory...\r\n");
     while (1);
   }
-  printf("Paint_NewImage\r\n");
   Paint_NewImage(Image, EPD_2in13_V4_WIDTH, EPD_2in13_V4_HEIGHT, 90, WHITE);
   Paint_Clear(WHITE);
+  DEV_Delay_ms(2000);
+}
+
+void showIntro(){
+  Paint_DrawImage(gImage_landscape,0,0,122,238);
+  EPD_2in13_V4_Display_Base(Image);
+  printf("Image displayed...\r\n");
+  DEV_Delay_ms(3000);
+  printf("after delay...\r\n");
+  Paint_ClearWindows(1,1,238,122,WHITE);
+  printf("window cleared...\r\n");
 }
 
 void drawTemplate(){
-
-  Paint_DrawLine(15, 40, 225, 40, BLACK, DOT_PIXEL_1X1, LINE_STYLE_SOLID);
+  printf("Draw template...\r\n");
+  Paint_DrawLine(15, 50, 225, 50, BLACK, DOT_PIXEL_1X1, LINE_STYLE_SOLID);
   Paint_DrawLine(115, 10, 115, 120, BLACK, DOT_PIXEL_1X1, LINE_STYLE_SOLID);
 
-  EPD_2in13_V4_Display_Base(Image);
+  //Paint_DrawBitMap(gImage_image);
+  // int font_width = 43;
+  // int font_high = 64;
+  // int dot_width = 4;
+  // int x = 0;
+  // int y = 60;
+
+  // Paint_DrawImage(gImage_big,y,x+font_width*0,font_high,font_width);
+  // Paint_DrawImage(gImage_big,y,x+font_width*1,font_high,font_width);
+  // Paint_DrawImage(gImage_big,y,x+font_width*2,font_high,font_width);
+  // Paint_DrawImage(gImage_big,y,x+font_width*3,font_high,font_width);
+
+  // font_width = 29;
+  // font_high = 51;
+  // dot_width = 4;
+  // x = 0;
+  // y = 0;
+
+  // Paint_DrawImage(gImage_small,y,x+font_width*0,font_high,font_width);
+  // Paint_DrawImage(gImage_small,y,x+font_width*1,font_high,font_width);
+  // Paint_DrawImage(gImage_small,y,x+font_width*2,font_high,font_width);
+  // Paint_DrawImage(gImage_small,y,x+font_width*3,font_high,font_width);
+  // EPD_2in13_V4_Display_Partial(Image);
+
+ 
 }
 
 void init(){
   initTempSensor();
   initEpaper();
+  showIntro();
   drawTemplate();
 }
 
@@ -74,7 +110,7 @@ void printInt(int x, int y, int value){
 }
 
 void drawChart(int x, int y, float current, float previous, int middle, int unitStep, int counter){
- float chartPixelsPerUnit = 25 / unitStep;
+ float chartPixelsPerUnit = 25 / unitStep; 
  float offsetCurrent = current - (float)middle;
  int offsetCurrentY = (int)(offsetCurrent * chartPixelsPerUnit + 25);
 
@@ -83,7 +119,7 @@ void drawChart(int x, int y, float current, float previous, int middle, int unit
 
  if (counter == 0) {
   offsetPreviousY = offsetCurrentY;
- }
+ } 
 
  Paint_DrawLine(x, y-offsetPreviousY, x, y-offsetCurrentY, BLACK, DOT_PIXEL_2X2, LINE_STYLE_SOLID);
 }
@@ -101,6 +137,7 @@ void resetChart(int x, int y, float value, int middleValue, int unitStep){
   printInt(x, middleY-5, middleValue);
   printInt(x, lowY-5, middleValue - unitStep);
   printInt(x, highY-5, middleValue + unitStep);
+  //  Paint_DrawImage(gImage_camera,0,120,116,86);
 }
 
 boolean shoudResetChart(float value, int middleValue, int counter, int unitOffset){
@@ -113,7 +150,7 @@ void printFloat(int x, int y, float value, char* format, char* unitSymbol){
   char buffer[16];
   int ret = snprintf(buffer, sizeof buffer, format, value);
   if (ret < 0) {
-    throw;
+    throw; 
   }
   Paint_ClearWindows(x, y, x + (strlen(buffer) * 18), y+24, WHITE);
   Paint_DrawString_EN(x, y, strcat(buffer, unitSymbol), &Font24, WHITE, BLACK);
@@ -161,7 +198,7 @@ void showTempAndHum(){
 /* Entry point ----------------------------------------------------------------*/
 void setup()
 {
-  int sleepSeconds = 1;
+  int sleepSeconds = 60; 
   esp_sleep_enable_timer_wakeup(sleepSeconds * uS_TO_S_FACTOR);
   init();
 }
@@ -169,6 +206,7 @@ void setup()
 /* The main loop -------------------------------------------------------------*/
 void loop()
 {
+  DEV_Delay_ms(1000);
   showTempAndHum();
   DEV_Delay_ms(50);
   esp_light_sleep_start();
