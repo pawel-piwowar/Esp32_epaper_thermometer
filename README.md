@@ -1,4 +1,17 @@
- Esp32_epaper_thermometer
+# E-paper thermometer
+### There were several goals for this project, distinguishing it from many similar temperature measuring designs:
+- good visibility, but with low power consumption. E-paper displays are hard to beat in this regard,
+since they have better contrast than LCD and consume power only when refreshed. This make them ideal choice for this kind of applications.
+- high measurement accuracy. For that reason I chose sensor based on STH35 from Sensirion,
+- since it offers very high precision (about 0.1 °C) (https://sensirion.com/media/documents/213E6A3B/63A5A569/Datasheet_SHT3x_DIS.pdf)
+Of course cheaper alternative can be used if we can accept lower accuracy. 
+For example DTH22, which I used in my another project https://www.waveshare.com/dht22-temperature-humidity-sensor.htm
+
+### Comparison between two of my projects using STH35 and DTH22 sensors. 
+In room temperature difference between them is in most cases in 0.1 - 0.3 °C range,
+which is very good result (I don't have professional thermometer for better comparison). Humidity precision seems also be ok.  
+
+![sht35-ath22.jpg](images/sht35-ath22.jpg)
 
 ## Hardware used:
 - 2.13inch E-Paper Cloud Module, 250×122, WiFi Connectivity : https://www.waveshare.com/2.13inch-e-paper-cloud-module.htm
