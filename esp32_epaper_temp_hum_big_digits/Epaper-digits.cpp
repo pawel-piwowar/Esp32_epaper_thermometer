@@ -1,5 +1,7 @@
 #include <algorithm>
 #include <iostream>
+#include "GUI_Paint.h"
+#include "EPD.h"
 #include "Epaper-digits.h"
 
 using namespace std;
@@ -444,6 +446,7 @@ const unsigned char gImage_perc[220] = { /* 0X41,0X01,0X14,0X00,0X58,0X00, */
 
 
 unsigned char gImage_digits[10][583];
+UBYTE *Image;
 
 void EpaperBigDigits::digits_init(void){
 
@@ -458,6 +461,70 @@ void EpaperBigDigits::digits_init(void){
   copy(begin(gImage_7), end(gImage_7) , begin(gImage_digits[digit_num++]));
   copy(begin(gImage_8), end(gImage_8) , begin(gImage_digits[digit_num++]));
   copy(begin(gImage_9), end(gImage_9) , begin(gImage_digits[digit_num++]));
+  initEpaper();
+  EPD_2in13_V4_Display_Base(Image);
 }
 
+void EpaperBigDigits::initEpaper() {
+  printf("epaper init starting...\r\n");
+  DEV_Module_Init();
+  EPD_2in13_V4_Init();
 
+  //Create a new image cache
+  UWORD Imagesize = ((EPD_2in13_V4_WIDTH % 8 == 0) ? (EPD_2in13_V4_WIDTH / 8) : (EPD_2in13_V4_WIDTH / 8 + 1)) * EPD_2in13_V4_HEIGHT;
+  if ((Image = (UBYTE *)malloc(Imagesize)) == NULL) {
+    printf("Failed to apply for black memory...\r\n");
+    while (1)
+      ;
+  }
+  Paint_NewImage(Image, EPD_2in13_V4_WIDTH, EPD_2in13_V4_HEIGHT, 90, WHITE);
+  Paint_Clear(WHITE);
+  DEV_Delay_ms(2000);
+}
+
+void EpaperBigDigits::drawDigit(int digit, int *x, int y, int font_high, int font_width) {
+  Paint_DrawImage(gImage_digits[digit], y, *x, font_high, font_width);
+  *x = *x + font_width;
+  return;
+}
+
+void EpaperBigDigits::drawSymbol(int *x, int y, int font_high, int font_width, const unsigned char gImage[]) {
+  Paint_DrawImage(gImage, y, *x, font_high, font_width);
+  *x = *x + font_width;
+  return;
+}
+
+void EpaperBigDigits::drawDigits(int x, int y, int digits[], Display_type display_type) {
+  for (int i = 0; i <= 1; i++) {
+    drawDigit(digits[i], &x, y, digits_font_high, digits_font_width);
+  }
+  drawSymbol(&x, y, digits_font_high, digits_dot_width, gImage_dot);
+  for (int i = 2; i <= 3; i++) {
+    drawDigit(digits[i], &x, y, digits_font_high, digits_font_width);
+  }
+  if (display_type == TEMPERATURE) {
+    drawSymbol(&x, y, digits_font_high, digits_celc_width, gImage_celc);
+  } else {
+    drawSymbol(&x, y, digits_font_high, digits_perc_width, gImage_perc);
+  }
+  EPD_2in13_V4_Display_Partial(Image);
+}
+
+void EpaperBigDigits::drawFloat(int x, int y, float value, Display_type display_type) {
+  int digits[4];
+  int position = 0;
+  int rest = int(value * 100);
+  for (int i = 0; i < 4; i++) {
+    calc_digits(digits, &position, &rest);
+  }
+  drawDigits(x, y, digits, display_type);
+}
+
+void EpaperBigDigits::calc_digits(int digits[4], int *position, int *rest) {
+  int multiplier = pow(10, 3 - *position);
+  int digit_value = (int)(*rest / multiplier);
+  digits[*position] = digit_value;
+  *rest = *rest - digit_value * multiplier;
+  *position = *position + 1;
+  return;
+}

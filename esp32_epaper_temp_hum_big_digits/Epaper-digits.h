@@ -15,11 +15,22 @@ extern const unsigned char gImage_perc[];
 extern const unsigned char gImage_temp[];
 extern unsigned char gImage_digits[10][583];
 
+enum Display_type {
+  TEMPERATURE,
+  HUMIDITY
+};
+
+
 class EpaperBigDigits {
 private:
-  void digits_init_inter(void);
+  void initEpaper();
+  void drawDigit(int digit, int *x, int y, int font_high, int font_width);
+  void drawSymbol(int *x, int y, int font_high, int font_width, const unsigned char gImage[]);
+  void calc_digits(int digits[4], int *position, int *rest);
 public:
   void digits_init(void);
+  void drawDigits(int x, int y, int digits[], Display_type display_type);
+  void drawFloat(int x, int y, float value, Display_type display_type);
 };
 
 
